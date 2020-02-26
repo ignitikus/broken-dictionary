@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const Word = require('./models/Words')
 
 router.get('/', (req, res) => {
   Word.find({}).then(words => {
@@ -7,11 +8,12 @@ router.get('/', (req, res) => {
   });
 });
 
+
 //add a new word
-router.delete('/addWord', (req, res) => {
+router.post('/addword', (req, res) => {
   const { word, definition } = req.body;
 
-  if (!word || !definition) {
+  if (!req.body.word || !req.body.definition) {
     return res.status(500).json({ message: 'All Inputs must be filled' });
   }
 
@@ -76,7 +78,7 @@ router.put('/:word', (req, res) => {
   });
 });
 
-router.delete('/word', (req, res) => {
+router.delete('/:word', (req, res) => {
   Word.findOneAndDelete({ word: req.params.word })
     .then(word => {
       return res.status(200).json({ message: 'Word deleted', word });
